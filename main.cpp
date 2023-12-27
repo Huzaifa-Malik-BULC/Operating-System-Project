@@ -6,7 +6,8 @@
 #include<algorithm>
 using namespace std;
 
-struct Student {
+class Student {
+public:
 	// Data Members
 	char studentName[30];
 	int studentAge;
@@ -15,37 +16,38 @@ struct Student {
 	char studentAddress[150];
 	float studentFee;
 	float takeTime;
-	char houseType[10];
+	char houseType[10]; // Possible Options: 'r' for Rental and 'n' for Non-Rental
 	char instituteName[30];
 	char fatherName[30];
 	char fatherCNIC[20];
 	char selectedFrom[150];
-	char fatherStatus[10];
+	char fatherStatus[10]; // Possible Options: 'a' for Alive and 'd' for deceased
 	float monthlyIncome;
-	float netExpense;
+	float netExpense; // Expeneses per year
 	int priority;
 	int numberOfSibllings;
-	bool interview;
+	bool interview; // true if called for interview, else false
+
 
 	// Member Functions
 	Student();
-	static void getPreviousStudentData();
+	static void getPreviousStudentData(); // Get data from file when we run program
 	void insertStudent(Student, string type);
-	bool isEmpty();
-	void searchForm(string studentCNIC);
-	bool doesExist(string studentCNIC);
-	void cancelForm(string studentCNIC);
-	void prioritySelection();
-	void display() const;
-	void displayAll();
-	bool validate();
-	void submitAnApplication();
+	bool isEmpty(); // Check if the student data base is empty or not
+	void searchForm(string studentCNIC); // Used to Search data of a student
+	bool doesExist(string studentCNIC); // Check if a student exists in the database or not
+	void deleteStudentApplication(string studentCNIC);
+	void prioritySelection(); // Prioritizes the students on the basis of their attributes
+	void display() const; // Displays the student data
+	void displayAll(); // Display the data of all students
+	bool validate(); // Checks if the data entered by the student is valid or not
+	void submitAnApplication(); // Adds the student data into the database
 
 };
 
-vector<Student> student_data;
+vector<Student> student_data; // All student data will be stored here
 
-vector<Student> sortVector(vector<Student> arr) {
+vector<Student> sortVector(vector<Student> arr) { // Picked from ChatGPT
 	// Sorting in ascending order based on priority
 	sort(arr.begin(), arr.end(), [](const Student& a, const Student& b) {
 		return a.priority < b.priority;
@@ -55,7 +57,7 @@ vector<Student> sortVector(vector<Student> arr) {
 
 int main() {
 	Student::getPreviousStudentData();
-	Student temp, student_data;
+	Student temp;
 	char choice = 'N';
 
 restart:
@@ -65,10 +67,10 @@ restart:
 	cout << "\n\n________________________________________________________________________________________________________________________";
 	cout << "\n\n\t\t\t\t\tWelcome To Student ScholarShip Program";
 	cout << "\n________________________________________________________________________________________________________________________";
-	cout << "\n\n\n\t\t1.  Submit An Application";
-	cout << "\n\n\n\t\t2.  Check An Application";
+	cout << "\n\n\n\t\t1.  Submit An Application"; // Submit Application for scholarship
+	cout << "\n\n\n\t\t2.  Check An Application"; // Check status of application
 	cout << "\n\n\n\t\t3.  Delete An Application";
-	cout << "\n\n\n\t\t4.  Application Database";
+	cout << "\n\n\n\t\t4.  Application Database"; // Show students database
 	cout << "\n\n\n\t\t5.  To Exit From Program\n\n\n\t\t";
 	cout << "\n\t\tChoose: ";
 	cin >> choice;
@@ -81,16 +83,16 @@ restart:
 	}
 	else if (choice == '2') {
 		cout << "\n\nEnter Student CNIC to Search Form: ";
-		cin >> student_data.studentCNIC;
+		cin >> temp.studentCNIC;
 
-		temp.searchForm(student_data.studentCNIC);
+		temp.searchForm(temp.studentCNIC);
 
 
 	}
 	else if (choice == '3') {
 		cout << "\n\nEnter Student CNIC to Search Form: ";
-		cin >> student_data.studentCNIC;
-		temp.cancelForm(student_data.studentCNIC);
+		cin >> temp.studentCNIC;
+		temp.deleteStudentApplication(temp.studentCNIC);
 	}
 	else if (choice == '4') {
 		temp.displayAll();
@@ -251,7 +253,7 @@ void Student::prioritySelection() {
 	}
 }
 
-void Student::cancelForm(string studentCNIC) {
+void Student::deleteStudentApplication(string studentCNIC) {
 	if (this->isEmpty()) {
 		cout << "\n\n________________________________________________________________________________________________________________________";
 		cout << "\n\n\t\t\t\t\t\tRecord List is empty ";
@@ -375,7 +377,6 @@ void Student::displayAll() {
 		// Display the congratulations message along with the list of the first 5 selected students
 		if (selectedCount > 0 && choice == 8) {
 			system("cls");
-			cout << "\n\n\t\tCongratulations! You have been selected for the scholarship.\n";
 			cout << "\n\n\t\tList of Students Who Got Selected:\n";
 			for (const auto& selectedStudent : selectedStudents) {
 				cout << "\n\t\tName: " << selectedStudent.studentName
@@ -384,11 +385,6 @@ void Student::displayAll() {
 					<< "\n\n";
 			}
 		}
-		else if (selectedCount > 0 && choice != 8) {
-			// Display congratulations message outside the loop if not viewing the list of selected students
-			cout << "\n\n\t\tCongratulations! You have been selected for the scholarship.\n";
-		}
-
 	}
 }
 
@@ -406,6 +402,10 @@ bool Student::validate() {
 	if (tolower(this->houseType[0]) != 'n' && tolower(this->houseType[0]) != 'r')
 		errors.push_back("House Type can either be Rental or Non Rental");
 
+	if (this->studentAge < 0) {
+		errors.push_back("Age cannot be less than zero");
+	}
+
 	if (this->monthlyIncome < 0)
 		errors.push_back("Monthly Income cannot be less than zero");
 
@@ -418,11 +418,12 @@ bool Student::validate() {
 	if (errors.size() > 0) { // Means errors are found and we need to display them
 		cout << "\n\n\t\t\tCould not Register.";
 		cout << "\n\n\t\t\tErrors Found:";
+
 		for (string error : errors)
 			cout << "\n\t\t\t" << error;
-		return false;
+		return false; // Means errors were found and we cannot register this student
 	}
-	else return true; // Means no errors are found
+	else return true; // Means no errors are found and we need to register the student
 }
 
 void Student::submitAnApplication() {
@@ -473,5 +474,5 @@ void Student::submitAnApplication() {
 	cin >> student_data.numberOfSibllings;
 
 	if (student_data.validate())
-		insertStudent(student_data, ""); // Pass the Student object to the insertStudent function
+		insertStudent(student_data, "not from a file"); // Pass the Student object to the insertStudent function
 }
