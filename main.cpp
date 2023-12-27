@@ -4,7 +4,10 @@
 #include<vector>
 #include<conio.h>
 #include<algorithm>
+#include <Windows.h>
 using namespace std;
+
+
 
 class Student {
 public:
@@ -45,6 +48,73 @@ public:
 
 };
 
+class Drawer
+{
+public:
+	void CordXY(int x, int y);
+	void DesignFirst(int x, int y, int z, int g);
+	void Line(int col);
+};
+
+void Drawer::CordXY(int x, int y)
+{
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	COORD position{ };
+	position.X = x;
+	position.Y = y;
+
+	SetConsoleCursorPosition(console, position);
+}
+
+void Drawer::DesignFirst(int x, int y, int z, int g)
+{
+	int a, b, c, d;
+	a = x;
+	b = y;
+	c = z, d = g;
+	// We draw FRAME for the bar
+	for (int i = x; i < y; i++)
+	{
+		CordXY(i, z);
+		cout << char(205); // 2 horizontal lines
+		CordXY(i, g);
+		cout << char(205);
+	}
+	for (int i = z + 1; i < g; i++) // 2 vertical lines
+	{
+		CordXY(a, i);
+		cout << char(186);
+		CordXY(b, i);
+		cout << char(186);
+	}
+	CordXY(a, z); // top left
+	cout << char(201);
+	CordXY(b, z); // top right
+	cout << char(187);
+	CordXY(a, g); // bottom left
+	cout << char(200);
+	CordXY(b, g); // bottom right
+	cout << char(188);
+}
+
+void Drawer::Line(int col)
+{
+	for (int i = 1; i <= col; i++)
+	{
+		if (i == 1 || i == col)
+		{
+			cout << "+";
+		}
+		else
+		{
+			cout << "-";
+		}
+	}
+}
+
+Drawer drawer;
+
 vector<Student> student_data; // All student data will be stored here
 
 vector<Student> sortVector(vector<Student> arr) { // Picked from ChatGPT
@@ -59,20 +129,55 @@ int main() {
 	Student::getPreviousStudentData();
 	Student temp;
 	char choice = 'N';
+	drawer.CordXY(30, 12);
+	system("color F4");
+	cout << "Loading:";
+	char x = 219;
+	for (int i = 0; i < 30; i++)
+	{
+		cout << x;
+		Sleep(30);
+		if (i == 5)
+		{
+			Sleep(500);
+		}
+		if (i == 20)
+		{
+			Sleep(200);
+		}
+	}
 
 restart:
 	system("cls"); // Clears the Screen
 
 	// Show options
-	cout << "\n\n________________________________________________________________________________________________________________________";
-	cout << "\n\n\t\t\t\t\tWelcome To Student ScholarShip Program";
-	cout << "\n________________________________________________________________________________________________________________________";
-	cout << "\n\n\n\t\t1.  Submit An Application"; // Submit Application for scholarship
-	cout << "\n\n\n\t\t2.  Check An Application"; // Check status of application
-	cout << "\n\n\n\t\t3.  Delete An Application";
-	cout << "\n\n\n\t\t4.  Application Database"; // Show students database
-	cout << "\n\n\n\t\t5.  To Exit From Program\n\n\n\t\t";
-	cout << "\n\t\tChoose: ";
+	system("color F0");
+	drawer.DesignFirst(25, 100, 2, 6);
+	drawer.CordXY(43, 4);
+	cout << "WELCOME TO STUDENT SCHOLARSHIP PROGRAM";
+	drawer.CordXY(28, 9);
+	cout << "1.Submit An Application";
+	drawer.CordXY(29, 10);
+	drawer.Line(30);
+	drawer.CordXY(28, 12);
+	cout << "2.Check An Application";
+	drawer.CordXY(29, 13);
+	drawer.Line(30);
+	drawer.CordXY(28, 15);
+	cout << "3.Delete An Application";
+	drawer.CordXY(29, 16);
+	drawer.Line(30);
+	drawer.CordXY(28, 18);
+	cout << "4.Application Database";
+	drawer.CordXY(29, 19);
+	drawer.Line(30);
+	drawer.CordXY(28, 21);
+	cout << "5.To Exit From Program";
+	drawer.CordXY(29, 22);
+	drawer.Line(30);
+	drawer.DesignFirst(29, 42, 23, 25);
+	drawer.CordXY(30, 24);
+	cout << "Choose: ";
 	cin >> choice;
 	cin.ignore();
 	system("cls"); // Clears the Screen
@@ -326,16 +431,45 @@ void Student::displayAll() {
 		int choice;
 	restart:
 		system("cls");
-		cout << "\n\n\t\t1) Show all applications";
-		cout << "\n\n\t\t2) Show Applications that have been asked for an interview";
-		cout << "\n\n\t\t3) Show Rejected Applications";
-		cout << "\n\n\t\t4) Show Applications with Priority 0";
-		cout << "\n\n\t\t5) Show Applications with Priority 1";
-		cout << "\n\n\t\t6) Show Applications with Priority 2";
-		cout << "\n\n\t\t7) Show Applications with Priority 3";
-		cout << "\n\n\t\t8) See who got selected";
-		cout << "\n\n\t\t9) Exit from Database";
-		cout << "\n\n\t\tChoose: ";
+		drawer.CordXY(30, 2);
+		cout << "1) Show all applications";
+		drawer.CordXY(30, 3);
+		drawer.Line(30);
+		drawer.CordXY(30, 4);
+		cout << "2) Show Applications that have been asked for an interview";
+		drawer.CordXY(30, 5);
+		drawer.Line(65);
+		drawer.CordXY(30, 6);
+		cout << "3) Show Rejected Applications";
+		drawer.CordXY(30, 7);
+		drawer.Line(34);
+		drawer.CordXY(30, 8);
+		cout << "4) Show Applications with Priority 0";
+		drawer.CordXY(30, 9);
+		drawer.Line(40);
+		drawer.CordXY(30, 10);
+		cout << "5) Show Applications with Priority 1";
+		drawer.CordXY(30, 11);
+		drawer.Line(40);
+		drawer.CordXY(30, 12);
+		cout << "6) Show Applications with Priority 2";
+		drawer.CordXY(30, 13);
+		drawer.Line(40);
+		drawer.CordXY(30, 14);
+		cout << "7) Show Applications with Priority 3";
+		drawer.CordXY(30, 15);
+		drawer.Line(40);
+		drawer.CordXY(30, 16);
+		cout << "8) See who got selected";
+		drawer.CordXY(30, 17);
+		drawer.Line(30);
+		drawer.CordXY(30, 18);
+		cout << "9) Exit from Database";
+		drawer.CordXY(30, 19);
+		drawer.Line(30);
+		drawer.DesignFirst(29, 42, 20, 22);
+		drawer.CordXY(30, 21);
+		cout << "Choose: ";
 		cin >> choice;
 		if (choice < 1 || choice > 9) goto restart;
 
