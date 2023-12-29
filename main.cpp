@@ -4,38 +4,36 @@
 #include<vector>
 #include<conio.h>
 #include<algorithm>
-#include <Windows.h>
+#include<Windows.h>
 using namespace std;
-
-
 
 class Student {
 public:
 	// Data Members
-	char studentName[30];
-	int studentAge;
-	char studentCNIC[20];
-	char studentPhoneNo[20];
-	char studentAddress[150];
-	float studentFee;
-	float takeTime;
+	char studentName[30]; // Name of the student
+	int studentAge; // Age of the student
+	char studentCNIC[20]; // CNIC of the student
+	char studentPhoneNo[20]; // Phone Number of the student
+	char studentAddress[150]; // Address of the student
+	float studentFee; // Fee of the student
+	float takeTime; // Time to be spent on interview
 	char houseType[10]; // Possible Options: 'r' for Rental and 'n' for Non-Rental
-	char instituteName[30];
-	char fatherName[30];
-	char fatherCNIC[20];
-	char selectedFrom[150];
+	char instituteName[30]; // Name of the institute
+	char fatherName[30]; // Name of the father
+	char fatherCNIC[20]; // CNIC of the father
+	char selectedFrom[150]; // From where the student is selected
 	char fatherStatus[10]; // Possible Options: 'a' for Alive and 'd' for deceased
-	float monthlyIncome;
+	float monthlyIncome; // Income per month
 	float netExpense; // Expeneses per year
-	int priority;
-	int numberOfSibllings;
+	int priority; // Priority of the student
+	int numberOfSibllings; // Number of siblings of the student
 	bool interview; // true if called for interview, else false
 
 
 	// Member Functions
-	Student();
+	Student(); // Default Constructor
 	static void getPreviousStudentData(); // Get data from file when we run program
-	void insertStudent(Student, string type);
+	void insertStudent(Student, string type); // Insert a student into the database
 	bool isEmpty(); // Check if the student data base is empty or not
 	void searchForm(string studentCNIC); // Used to Search data of a student
 	bool doesExist(string studentCNIC); // Check if a student exists in the database or not
@@ -45,7 +43,6 @@ public:
 	void displayAll(); // Display the data of all students
 	bool validate(); // Checks if the data entered by the student is valid or not
 	void submitAnApplication(); // Adds the student data into the database
-
 };
 
 class Drawer
@@ -129,6 +126,7 @@ int main() {
 	Student::getPreviousStudentData();
 	Student temp;
 	char choice = 'N';
+
 	drawer.CordXY(30, 12);
 	system("color F4");
 	cout << "Loading:";
@@ -230,7 +228,7 @@ void Student::getPreviousStudentData() {
 		}
 	}
 	else {
-		fstream createFile("students_data.dat", ios::binary | ios::app);
+		fstream createFile("students_data.dat", ios::binary | ios::app); // Create a file if it does not exist
 		createFile.close();
 	}
 	getStudentData.close();
@@ -561,7 +559,7 @@ bool Student::validate() {
 }
 
 void Student::submitAnApplication() {
-	Student student_data; // Allocate memory for a new Student object
+	Student student_data;
 
 	cout << "\n\n\t\tEnter Name Of The Student: ";
 	cin.getline(student_data.studentName, 150);
@@ -595,7 +593,7 @@ void Student::submitAnApplication() {
 	cout << "\n\n\t\tFather is Alive? 'a' for Alive 'd' for Deceased: ";
 	cin.getline(student_data.fatherStatus, 150);
 
-	cout << "\n\n\t\tEnter House Type and Size Of Student Mention Rental/Non Rental in Start: ";
+	cout << "\n\n\t\tEnter House Type and Size Of Student Mention Rental (r)/Non Rental (n) in Start: ";
 	cin.getline(student_data.houseType, 150);
 
 	cout << "\n\n\t\tEnter Monthly Income: ";
@@ -608,5 +606,5 @@ void Student::submitAnApplication() {
 	cin >> student_data.numberOfSibllings;
 
 	if (student_data.validate())
-		insertStudent(student_data, "not from a file"); // Pass the Student object to the insertStudent function
+		insertStudent(student_data, ""); // Pass the Student object to the insertStudent function
 }
